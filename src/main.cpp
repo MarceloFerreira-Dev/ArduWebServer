@@ -14,8 +14,8 @@ IPAddress ip(192,168,1, 111);
 EthernetServer server(80);
 
 // Relay state and pin
-String relay1State = "Off";
-const int relay = 7;
+String LEDState = "Off";
+const int Led = 7;
 
 // Client variables 
 char linebuf[80];
@@ -23,8 +23,8 @@ int charcount=0;
 
 void setup() { 
   // Relay module prepared 
-  pinMode(relay, OUTPUT);
-  digitalWrite(relay, HIGH);
+  pinMode(Led, OUTPUT);
+  digitalWrite(Led, HIGH);
   
   // Open serial communication at a baud rate of 9600
   Serial.begin(9600);
@@ -38,19 +38,21 @@ void setup() {
 
 // Display dashboard page with on/off button for relay
 // It also print Temperature in C and F
+// client.println("");
 void dashboardPage(EthernetClient &client) {
-  client.println("<!DOCTYPE HTML><html><head>");
+  client.println("<!DOCTYPE HTML><html lang='en'><html><head><title>GATE</title>");
+  client.println("<meta charset='utf-8'>");
   client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body>");                                                             
   client.println("<h3>Gate control - <a href=\"/\">Refresh</a></h3>");
   // Generates buttons to control the relay
-  client.println("<h4>Relay 1 - State: " + relay1State + "</h4>");
+  client.println("<h4>LED ON - State: " + LEDState + "</h4>");
   // If relay is off, it shows the button to turn the output on          
-  if(relay1State == "Off"){
-    client.println("<a href=\"/relay1on\"><button>ON</button></a>");
+  if(LEDState == "Off"){
+    client.println("<a href=\"/led_on\"><button>ON</button></a>");
   }
   // If relay is on, it shows the button to turn the output off         
-  else if(relay1State == "On"){
-    client.println("<a href=\"/relay1off\"><button>OFF</button></a>");                                                                    
+  else if(LEDState == "On"){
+    client.println("<a href=\"/led_off\"><button>OFF</button></a>");                                                                    
   }
   client.println("</body></html>"); 
 }
@@ -79,13 +81,13 @@ void loop() {
           break;
         }
         if (c == '\n') {
-          if (strstr(linebuf,"GET /relay1off") > 0){
-            digitalWrite(relay, HIGH);
-            relay1State = "Off";
+          if (strstr(linebuf,"GET /led_off") > 0){
+            digitalWrite(Led, HIGH);
+            LEDState = "Off";
           }
-          else if (strstr(linebuf,"GET /relay1on") > 0){
-            digitalWrite(relay, LOW);
-            relay1State = "On";
+          else if (strstr(linebuf,"GET /led_on") > 0){
+            digitalWrite(Led, LOW);
+            LEDState = "On";
           }
           // you're starting a new line
           currentLineIsBlank = true;
