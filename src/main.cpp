@@ -42,18 +42,22 @@ void setup() {
 void dashboardPage(EthernetClient &client) {
   client.println("<!DOCTYPE HTML><html lang='en'><html><head><title>GATE</title>");
   client.println("<meta charset='utf-8'>");
-  client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body>");                                                             
-  client.println("<h3>Gate control - <a href=\"/\">Refresh</a></h3>");
+  client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body>");  
+  client.println("<style> body {background-color: rgb(40, 195, 195);} h1   {color: blue;} h4    {color: red;}</style>");
+  client.println("<style>  .button {    display: inline-block;    padding: 15px 25px;    font-size: 24px;    cursor: pointer;    text-align: center;    text-decoration: none;    outline: none;    color: #fff;    background-color: #4CAF50;    border: none;    border-radius: 15px;    box-shadow: 0 9px #999;  }    .button:hover {background-color: #3e8e41}    .button:active {    background-color: #3e8e41;    box-shadow: 0 5px #666;    transform: translateY(4px);  }  </style>");
+  client.println("<h1>Gate control - <a href=\"/\">Refresh</a></h3>");
   // Generates buttons to control the relay
   client.println("<h4>LED ON - State: " + LEDState + "</h4>");
   // If relay is off, it shows the button to turn the output on          
   if(LEDState == "Off"){
-    client.println("<a href=\"/led_on\"><button>ON</button></a>");
+    client.println("<a href=\"/led_on\"><button class='button'>OFF</button></a>");
+    // client.println("<div class='buttonHolder'><a href='#'' class='button tick'></a></div>");
   }
   // If relay is on, it shows the button to turn the output off         
   else if(LEDState == "On"){
-    client.println("<a href=\"/led_off\"><button>OFF</button></a>");                                                                    
+    client.println("<a href=\"/led_off\"><button class='button'>ON</button></a>");                                                                    
   }
+  
   client.println("</body></html>"); 
 }
 
