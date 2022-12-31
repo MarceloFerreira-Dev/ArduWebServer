@@ -14,7 +14,7 @@ IPAddress ip(192,168,1, 111);
 EthernetServer server(80);
 
 // Relay state and pin
-String LEDState = "Off";
+String LEDState = "Close";
 const int Led = 7;
 
 // Client variables 
@@ -43,18 +43,24 @@ void dashboardPage(EthernetClient &client) {
   client.println("<!DOCTYPE HTML><html lang='en'><html><head><title>GATE</title>");
   client.println("<meta charset='utf-8'>");
   client.println("<meta name='viewport' content='width=device-width, initial-scale=1'></head><body>");  
-  client.println("<style> body {background-color: rgb(40, 195, 195);} h1   {color: blue;} h4    {color: red;}</style>");
+  client.println("<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css' rel='stylesheet'>");
+  client.println("<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js'></script>");
+  client.println("<style> body {background-color: rgb(56, 68, 77);} h1   {color: White;} h4    {color: red;}</style>");
   client.println("<style>  .button {    display: inline-block;    padding: 15px 25px;    font-size: 24px;    cursor: pointer;    text-align: center;    text-decoration: none;    outline: none;    color: #fff;    background-color: #4CAF50;    border: none;    border-radius: 15px;    box-shadow: 0 9px #999;  }    .button:hover {background-color: #3e8e41}    .button:active {    background-color: #3e8e41;    box-shadow: 0 5px #666;    transform: translateY(4px);  }  </style>");
-  client.println("<h1>Gate control - <a href=\"/\">Refresh</a></h3>");
+  client.println("<div class='container-fluid p-5 bg-primary text-white text-center'>");
+  client.println("<h1>Gate Control - <a href=\"/\">Refresh</a></h3>");
+  client.println("</div>");
+
+  
   // Generates buttons to control the relay
   client.println("<h4>LED ON - State: " + LEDState + "</h4>");
   // If relay is off, it shows the button to turn the output on          
-  if(LEDState == "Off"){
+  if(LEDState == "Close"){
     client.println("<a href=\"/led_on\"><button class='button'>OFF</button></a>");
     // client.println("<div class='buttonHolder'><a href='#'' class='button tick'></a></div>");
   }
   // If relay is on, it shows the button to turn the output off         
-  else if(LEDState == "On"){
+  else if(LEDState == "Open"){
     client.println("<a href=\"/led_off\"><button class='button'>ON</button></a>");                                                                    
   }
   
@@ -85,13 +91,13 @@ void loop() {
           break;
         }
         if (c == '\n') {
-          if (strstr(linebuf,"GET /led_off") > 0){
+          if (strstr(linebuf,"GET /led_on") > 0){
             digitalWrite(Led, HIGH);
-            LEDState = "Off";
+            LEDState = "Open";
           }
-          else if (strstr(linebuf,"GET /led_on") > 0){
+          else if (strstr(linebuf,"GET /led_off") > 0){
             digitalWrite(Led, LOW);
-            LEDState = "On";
+            LEDState = "Close";
           }
           // you're starting a new line
           currentLineIsBlank = true;
