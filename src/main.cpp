@@ -42,7 +42,7 @@ void setup() {
 void dashboardPage(EthernetClient &client) {
   client.println("<!DOCTYPE HTML><html lang='en'><html><head><title>GATE</title>");
   client.println("<meta charset='utf-8'>");
-  client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body>");  
+  client.println("<meta name='viewport' content='width=device-width, initial-scale=1'></head><body>");  
   client.println("<style> body {background-color: rgb(40, 195, 195);} h1   {color: blue;} h4    {color: red;}</style>");
   client.println("<style>  .button {    display: inline-block;    padding: 15px 25px;    font-size: 24px;    cursor: pointer;    text-align: center;    text-decoration: none;    outline: none;    color: #fff;    background-color: #4CAF50;    border: none;    border-radius: 15px;    box-shadow: 0 9px #999;  }    .button:hover {background-color: #3e8e41}    .button:active {    background-color: #3e8e41;    box-shadow: 0 5px #666;    transform: translateY(4px);  }  </style>");
   client.println("<h1>Gate control - <a href=\"/\">Refresh</a></h3>");
