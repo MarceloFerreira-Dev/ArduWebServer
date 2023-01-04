@@ -17,6 +17,10 @@ EthernetServer server(80);
 String LEDState = "Close";
 const int Led = 7;
 
+// Timing Controller
+unsigned long timelapse = 0;
+int TimerCtl = 0;
+
 // Client variables 
 char linebuf[80];
 int charcount=0;
@@ -39,6 +43,7 @@ void setup() {
 // Display dashboard page with on/off button for relay
 // It also print Temperature in C and F
 // client.println("");
+
 void dashboardPage(EthernetClient &client) {
   client.println("<!DOCTYPE HTML><html lang='en'><html><head><title>GATE</title>");
   client.println("<meta charset='utf-8'>");
@@ -49,26 +54,33 @@ void dashboardPage(EthernetClient &client) {
   client.println("<style>  .button {    display: inline-block;    padding: 15px 25px;    font-size: 24px;    cursor: pointer;    text-align: center;    text-decoration: none;    outline: none;    color: #fff;    background-color: #4CAF50;    border: none;    border-radius: 15px;    box-shadow: 0 9px #999;  }    .button:hover {background-color: #3e8e41}    .button:active {    background-color: #3e8e41;    box-shadow: 0 5px #666;    transform: translateY(4px);  }  </style>");
   client.println("<div class='container-fluid p-5 bg-primary text-white text-center'>");
   client.println("<h1>Gate Control - <a href=\"/\">Refresh</a></h3>");
-  client.println("</div>");
 
-  
+
+
   // Generates buttons to control the relay
   client.println("<h4>LED ON - State: " + LEDState + "</h4>");
   // If relay is off, it shows the button to turn the output on          
   if(LEDState == "Close"){
     client.println("<a href=\"/led_on\"><button class='button'>OFF</button></a>");
-    // client.println("<div class='buttonHolder'><a href='#'' class='button tick'></a></div>");
   }
   // If relay is on, it shows the button to turn the output off         
   else if(LEDState == "Open"){
-    client.println("<a href=\"/led_off\"><button class='button'>ON</button></a>");                                                                    
+    client.println("<a href=\"/led_off\"><button class='button'>ON</button></a>");                                                                   
   }
-  
+  client.println("</div>");
   client.println("</body></html>"); 
 }
 
 
 void loop() {
+  if (TimerCtl == 1) {
+    if ((millis() - timelapse) >= 5000 ) {
+      digitalWrite(Led, LOW);
+      LEDState = "Close";
+      TimerCtl = 0;
+      
+    }
+ }
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) {
@@ -82,7 +94,7 @@ void loop() {
        char c = client.read();
        //read char by char HTTP request
         linebuf[charcount]=c;
-        if (charcount<sizeof(linebuf)-1) charcount++;
+        if (charcount < sizeof(linebuf)-1) charcount++;
         // if you've gotten to the end of the line (received a newline
         // character) and the line is blank, the http request has ended,
         // so you can send a reply
@@ -94,6 +106,8 @@ void loop() {
           if (strstr(linebuf,"GET /led_on") > 0){
             digitalWrite(Led, HIGH);
             LEDState = "Open";
+            timelapse = millis();
+            TimerCtl = 1;
           }
           else if (strstr(linebuf,"GET /led_off") > 0){
             digitalWrite(Led, LOW);
