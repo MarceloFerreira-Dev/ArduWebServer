@@ -73,14 +73,14 @@ void dashboardPage(EthernetClient &client) {
 
 
 void loop() {
-  if (TimerCtl == 1) {
-    if ((millis() - timelapse) >= 5000 ) {
-      digitalWrite(Led, LOW);
-      LEDState = "Close";
-      TimerCtl = 0;
-      
-    }
- }
+ // if (TimerCtl == 1) {
+ //   if ((millis() - timelapse) >= 5000 ) {
+ //     digitalWrite(Led, LOW);
+ //     LEDState = "Close";
+ //     TimerCtl = 0;
+ //     
+ //   }
+ //}
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) {
