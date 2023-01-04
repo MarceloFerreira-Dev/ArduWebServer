@@ -18,8 +18,8 @@ String LEDState = "Close";
 const int Led = 7;
 
 // Timing Controller
-unsigned long timelapse = 0;
-int TimerCtl = 0;
+// unsigned long timelapse = 0;
+// int TimerCtl = 0;
 
 // Client variables 
 char linebuf[80];
@@ -80,7 +80,7 @@ void loop() {
  //     TimerCtl = 0;
  //     
  //   }
- //}
+ // }
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) {
@@ -94,7 +94,7 @@ void loop() {
        char c = client.read();
        //read char by char HTTP request
         linebuf[charcount]=c;
-        if (charcount < sizeof(linebuf)-1) charcount++;
+        if (charcount<sizeof(linebuf)-1) charcount++;
         // if you've gotten to the end of the line (received a newline
         // character) and the line is blank, the http request has ended,
         // so you can send a reply
@@ -106,8 +106,8 @@ void loop() {
           if (strstr(linebuf,"GET /led_on") > 0){
             digitalWrite(Led, HIGH);
             LEDState = "Open";
-            timelapse = millis();
-            TimerCtl = 1;
+            // timelapse = millis();
+            // TimerCtl = 1;
           }
           else if (strstr(linebuf,"GET /led_off") > 0){
             digitalWrite(Led, LOW);
@@ -128,6 +128,6 @@ void loop() {
     delay(1);
     // close the connection:
     client.stop();
-    Serial.println("client disonnected");
+    Serial.println("client disconnected");
   }
 }
